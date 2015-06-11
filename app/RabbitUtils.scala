@@ -4,7 +4,7 @@ import com.rabbitmq.client._
 
 object RabbitUtils {
   def publishTestMessages(exchangeName: String, routingKey: String)(implicit conn: Connection, channel: Channel) = {
-    for (i <- 1 to 1000000) {
+    for (i <- 1 to 100) {
       val msg = s"Hello, world! $i"
       publish(exchangeName, routingKey, msg)
     }
@@ -47,7 +47,9 @@ object RabbitUtils {
   channel.queueBind(queueName, exchangeName, routingKey) }
 
   def publish(exchangeName:String, routingKey:String, msg:String)(implicit channel:Channel) = {
-  channel.basicPublish(exchangeName, routingKey, null, msg.getBytes) }
+
+    val mp = MessageProperties.PERSISTENT_BASIC
+    channel.basicPublish(exchangeName, routingKey, mp, msg.getBytes) }
 
 
 }
