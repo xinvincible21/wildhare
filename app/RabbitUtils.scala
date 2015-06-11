@@ -4,7 +4,7 @@ import com.rabbitmq.client._
 
 object RabbitUtils {
   def publishTestMessages(exchangeName: String, routingKey: String)(implicit conn: Connection, channel: Channel) = {
-    for (i <- 1 to 100) {
+    for (i <- 1 to 1000000) {
       val msg = s"Hello, world! $i"
       publish(exchangeName, routingKey, msg)
     }
