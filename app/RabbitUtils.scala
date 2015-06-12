@@ -50,8 +50,8 @@ object RabbitUtils {
 
   def publish(exchangeName:String, routingKey:String, msg:String)(implicit channel:Channel) = {
 
-    //val mp = MessageProperties.PERSISTENT_BASIC
-    val mp = null
+    val mp = MessageProperties.PERSISTENT_BASIC
+    //val mp = null
     channel.basicPublish(exchangeName, routingKey, mp, msg.getBytes)
   }
 
