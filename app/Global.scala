@@ -12,9 +12,8 @@ object Global extends GlobalSettings {
   implicit val conn = getConnection
   implicit val channel = getChannel
 
-  val numberOfWorkers = 400
+  val numberOfWorkers = 500
 
-  println(System.currentTimeMillis())
   val jobWorkers =
     for(i <- 1 to numberOfWorkers) yield {
       JobWorker(s"job worker $i")
@@ -24,7 +23,6 @@ object Global extends GlobalSettings {
     for(i <- 1 to numberOfWorkers) yield {
       StatusWorker(s"status worker $i")
     }
-  println(System.currentTimeMillis())
 
 
   override def onStart(app: Application) {
