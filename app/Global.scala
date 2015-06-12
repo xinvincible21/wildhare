@@ -12,7 +12,7 @@ object Global extends GlobalSettings {
   implicit val conn = getConnection
   implicit val channel = getChannel
 
-  val numberOfWorkers = 500
+  val numberOfWorkers = 1000
 
   val jobWorkers =
     for(i <- 1 to numberOfWorkers) yield {
@@ -33,11 +33,11 @@ object Global extends GlobalSettings {
     startup(exchangeName = "rb-status-exchange", queueName = "rb-status", routingKey = "#")
 
 
-    for(worker <- jobWorkers) Future {
+    for(worker <- jobWorkers) {
       worker.consume(exchangeName = "rb-job-exchange", publisherExchangeName = "rb-worker-exchange", queueName = "rb-job", routingKey = "#")
     }
 
-    for(worker <- statusWorkers) Future {
+    for(worker <- statusWorkers) {
       worker.consume(exchangeName = "rb-worker-exchange", publisherExchangeName = "rb-status-exchange", queueName = "rb-worker", routingKey = "#")
     }
 

@@ -11,7 +11,7 @@ case class JobWorker(name:String)(implicit val conn:Connection) {
 
   def consume(exchangeName: String, publisherExchangeName:String, queueName: String, routingKey: String) = {
 
-    val autoAck = false
+    val autoAck = true
     channel.basicConsume(queueName, autoAck, name,
       new DefaultConsumer(channel) {
         override def handleDelivery(consumerTag: String,
@@ -22,8 +22,8 @@ case class JobWorker(name:String)(implicit val conn:Connection) {
           val contentType = properties.getContentType
           val deliveryTag = envelope.getDeliveryTag
           val msg = new String(body)
-          Logger.info(s"$name consuming message $msg")
-          channel.basicAck(deliveryTag, false)
+          //Logger.info(s"$name consuming message $msg")
+          //channel.basicAck(deliveryTag, false)
           publish(publisherExchangeName, routingKey, msg)
         }
       }
