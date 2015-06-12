@@ -12,8 +12,9 @@ object Global extends GlobalSettings {
   implicit val conn = getConnection
   implicit val channel = getChannel
 
-  val numberOfWorkers = 50
+  val numberOfWorkers = 400
 
+  println(System.currentTimeMillis())
   val jobWorkers =
     for(i <- 1 to numberOfWorkers) yield {
       JobWorker(s"job worker $i")
@@ -23,8 +24,11 @@ object Global extends GlobalSettings {
     for(i <- 1 to numberOfWorkers) yield {
       StatusWorker(s"status worker $i")
     }
+  println(System.currentTimeMillis())
+
 
   override def onStart(app: Application) {
+
     //Logger.info("starting 2 workers")
     startup(exchangeName = "rb-job-exchange", queueName = "rb-job", routingKey = "#")
     startup(exchangeName = "rb-worker-exchange", queueName = "rb-worker", routingKey = "#")
@@ -41,13 +45,13 @@ object Global extends GlobalSettings {
 
   }
 
-   override def onStop(app: Application): Unit = {
+   override def onStop(app: Application) {
      shutdown()
-     for(worker <- jobWorkers) Future {
+     for(worker <- jobWorkers) {
        worker.shutdown()
      }
 
-     for(worker <- statusWorkers) Future {
+     for(worker <- statusWorkers) {
        worker.shutdown()
      }
    }

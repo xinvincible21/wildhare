@@ -5,10 +5,9 @@ import com.rabbitmq.client._
 import play.api._
 
 
-case class JobWorker(name:String) {
-  implicit val conn = getConnection
+case class JobWorker(name:String)(implicit val conn:Connection) {
+  //implicit val conn = getConnection
   implicit val channel = getChannel
-  
 
   def consume(exchangeName: String, publisherExchangeName:String, queueName: String, routingKey: String) = {
 
@@ -34,7 +33,7 @@ case class JobWorker(name:String) {
 
   def shutdown() = {
     channel.close()
-    conn.close()
+    //conn.close()
   }
 }
 

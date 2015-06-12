@@ -12,3 +12,4 @@ LICENSE
 activator
 activator-launch-1.3.4.jar
 activator.bat
+conf/hikaricp.properties

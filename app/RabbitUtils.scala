@@ -2,6 +2,9 @@ package utils
 
 import com.rabbitmq.client._
 
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
 object RabbitUtils {
   def publishTestMessages(exchangeName: String, routingKey: String)(implicit conn: Connection, channel: Channel) = {
     for (i <- 1 to 1000000) {
@@ -40,16 +43,17 @@ object RabbitUtils {
   def declareExchange(exchangeName:String)(implicit channel:Channel) = {
   channel.exchangeDeclare(exchangeName, "direct", true) }
 
-  def declareQueue(queueName:String)(implicit channel:Channel) = { channel.queueDeclare(queueName, true,
-  false, false, null) }
+  def declareQueue(queueName:String)(implicit channel:Channel) = { channel.queueDeclare(queueName, true, false, false, null) }
 
   def bindQueue(queueName:String, exchangeName:String, routingKey:String)(implicit channel:Channel) = {
   channel.queueBind(queueName, exchangeName, routingKey) }
 
   def publish(exchangeName:String, routingKey:String, msg:String)(implicit channel:Channel) = {
 
-    val mp = MessageProperties.PERSISTENT_BASIC
-    channel.basicPublish(exchangeName, routingKey, mp, msg.getBytes) }
+    //val mp = MessageProperties.PERSISTENT_BASIC
+    val mp = null
+    channel.basicPublish(exchangeName, routingKey, mp, msg.getBytes)
+  }
 
 
 }

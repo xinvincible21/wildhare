@@ -1,11 +1,13 @@
 package controllers
 
+import com.zaxxer.hikari.{HikariDataSource, HikariConfig}
 import play.api.mvc._
 import utils.RabbitUtils._
 
 class Application extends Controller {
 
   def index = Action {
+
     Ok(views.html.index("Your new application is ready."))
   }
 
