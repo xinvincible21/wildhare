@@ -3,14 +3,14 @@ package worker
 import utils.RabbitUtils._
 import com.rabbitmq.client._
 import play.api._
-
+import play.api.Logger
 
 case class StatusWorker(name:String)(implicit val conn:Connection) {
-  //implicit val conn = getConnection
   implicit val channel = getChannel
 
   def consume(exchangeName: String, publisherExchangeName:String, queueName: String, routingKey: String) = {
 
+    //val autoAck = true
     val autoAck = true
     channel.basicConsume(queueName, autoAck, name,
       new DefaultConsumer(channel) {
@@ -23,7 +23,7 @@ case class StatusWorker(name:String)(implicit val conn:Connection) {
           val deliveryTag = envelope.getDeliveryTag
           //val status = ""
           val msg = new String(body) + " completed"
-          //Logger.info(s"$name consuming message $msg")
+          Logger.info(s"$name consuming message $msg")
           //channel.basicAck(deliveryTag, false)
 
           publish(publisherExchangeName, routingKey, msg)
